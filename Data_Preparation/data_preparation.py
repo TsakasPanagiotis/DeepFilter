@@ -133,7 +133,7 @@ def Data_Preparation(noise_version=1):
 
             b_np[init_padding:b_sq.shape[0] + init_padding] = b_sq - (b_sq[0] + b_sq[-1]) / 2
 
-            if signal_name in test_set:
+            if signal_name.split('\\')[1] in test_set:
                 beats_test.append(b_np)
             else:
                 beats_train.append(b_np)
