@@ -1,3 +1,25 @@
+# First Time Setup
+1. Clone repository
+~~~
+git clone https://github.com/TsakasPanagiotis/DeepFilter
+~~~
+2. Create virtual environment
+~~~
+python -m venv .venv
+~~~
+3. Activate virtual environment
+~~~
+./.venv/Scripts/Activate.ps1
+~~~
+4. Upgrade pip
+~~~
+python -m pip install --upgrade pip
+~~~
+5. Install libraries
+~~~
+pip install -r ./requirements.txt
+~~~
+
 # DeepFilter
 For a more theoretical information please visit our paper in the journal **Biomedical Signal and Control**: 
 [https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899](https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899 "paper")  
