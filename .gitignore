@@ -6,6 +6,7 @@
 deepFilter/__pycache__/*
 utils/__pycache__/*
 /data/*
+/.venv
 
 # Files to ignore
 *.pyc
