@@ -10,7 +10,7 @@
 #===========================================================
 
 import numpy as np
-import _pickle as pickle
+import pickle
 from Data_Preparation import Prepare_QTDatabase, Prepare_NSTDB
 
 def Data_Preparation(noise_version=1):

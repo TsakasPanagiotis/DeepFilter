@@ -23,7 +23,7 @@
 
 import numpy as np
 import wfdb
-import _pickle as pickle
+import pickle
 
 def prepare(NSTDBPath='data/mit-bih-noise-stress-test-database-1.0.0/'):
 

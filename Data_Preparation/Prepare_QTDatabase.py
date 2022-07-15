@@ -32,7 +32,7 @@ import numpy as np
 from scipy.signal import resample_poly
 import wfdb
 import math
-import _pickle as pickle
+import pickle
 
 
 def prepare(QTpath='data/qt-database-1.0.0/'):
