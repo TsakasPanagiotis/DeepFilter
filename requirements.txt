@@ -1,0 +1,10 @@
+numpy
+wfdb
+keras
+scikit-learn
+scipy
+matplotlib
+seaborn
+pandas
+prettytable
+tensorflow
