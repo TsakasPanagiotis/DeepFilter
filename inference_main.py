@@ -1,4 +1,4 @@
-# %%
+# %% IMPORTS
 
 import math
 from typing import List
@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import resample_poly
 
-from inference import dataset, experiments, raw
+from inference import dataset, experiments, raw, fir_filter, iir_filter
 
 # %% LIMIT GPU USAGE OF TENSORFLOW
 
@@ -26,22 +26,22 @@ if gpus:
 
 # %% LOAD DATASET SPLITS
 
-# choose between 1 or 2
 noise_version: int = 1
+# choose between 1 or 2
 
-# shapes: (num_examples, num_samples=512, 1)
 [X_train, y_train, X_val, y_val, X_test, y_test] = dataset.get_splits(noise_version)
+# shapes: (num_examples, num_samples=512, 1)
 
 # %% LOAD PRETRAINED MODEL
 
-experiment= experiments.Experiment.Multibranch_LANLD
+experiment= experiments.Experiment.DRNN
 
 model = experiments.load_model(experiment, noise_version)
 
 # %% MAKE PREDICTIONS ON TEST SET
 
-# shape: (num_examples, num_samples=512, 1)
 y_pred: np.ndarray = model.predict(X_test, batch_size=32, verbose=1)
+# shape: (num_examples, num_samples=512, 1)
 
 # %% VISUALIZE SINGLE PREDICTION
 
@@ -74,8 +74,9 @@ start_sample = 7_450
 num_old_fs_samples = max_num_old_fs_samples 
 # or any other number below max_num_old_fs_samples
 
-# shape: (num_old_fs_samples,)
 test_beat = ecg[start_sample: start_sample + num_old_fs_samples]
+# shape: (num_old_fs_samples,)
+
 print(f'test beat shape: {test_beat.shape}')
 
 plt.figure(figsize=(10,5))
@@ -98,13 +99,63 @@ assert len(res_beat) == num_new_fs_samples
 pad_res_beat: np.ndarray = np.zeros((1, 512, 1))
 pad_res_beat[0, 0:num_new_fs_samples, 0] = res_beat
 
-# %% 
+# %% VISUALIZE TEST BEAT PREDICTION
 
 sample_y_pred: np.ndarray = model.predict(pad_res_beat, batch_size=32, verbose=1)
 
 plt.figure(figsize=(10,5))
 plt.plot(pad_res_beat[0], label='sample')
 plt.plot(sample_y_pred[0], label='pred')
+plt.legend()
+plt.show()
+
+# %% PASS TEST SET THROUGH FIR
+
+y_fir = fir_filter.FIR_Dataset(X_test[:10], new_fs)
+
+# %% VISUALIZE SINGLE FIR PREDICTION
+
+index = 9
+
+plt.figure(figsize=(10,5))
+plt.plot(X_test[index], label='X_test')
+plt.plot(y_test[index], label='y_test')
+plt.plot(y_fir[index], label='y_pred')
+plt.legend()
+plt.show()
+
+# %% PASS TEST BEAT THROUGH FIR
+
+y_fir = fir_filter.FIR_Dataset(pad_res_beat, new_fs)
+
+plt.figure(figsize=(10,5))
+plt.plot(pad_res_beat[0], label='sample')
+plt.plot(y_fir[0], label='pred')
+plt.legend()
+plt.show()
+
+# %% PASS TEST SET THROUGH IIR
+
+y_iir = iir_filter.IIR_test_Dataset(X_test[:10], new_fs)
+
+# %% VISUALIZE SINGLE IIR PREDICTION
+
+index = 0
+
+plt.figure(figsize=(10,5))
+plt.plot(X_test[index], label='X_test')
+plt.plot(y_test[index], label='y_test')
+plt.plot(y_iir[index], label='y_pred')
+plt.legend()
+plt.show()
+
+# %% PASS TEST BEAT THROUGH IIR
+
+y_iir = iir_filter.IIR_test_Dataset(pad_res_beat, new_fs)
+
+plt.figure(figsize=(10,5))
+plt.plot(pad_res_beat[0], label='sample')
+plt.plot(y_iir[0], label='pred')
 plt.legend()
 plt.show()
 
