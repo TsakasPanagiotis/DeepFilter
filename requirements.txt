@@ -9,3 +9,4 @@ pandas
 prettytable
 tensorflow
 mne
+PyQt5
