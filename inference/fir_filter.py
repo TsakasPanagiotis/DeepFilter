@@ -53,7 +53,9 @@ def FIRRemoveBL(ecgy, Fs, Fc, factor):
 
     # Compute the order and Kaiser parameter for the FIR filter.
     N, beta = kaiserord(ripple_db, width)
-       
+
+    N = N | 1 # sets the lowest bit of N to 1 so that N is odd
+
     # Use firwin with a Kaiser window to create a highpass FIR filter.
     h = firwin(N, Fc/nyq_rate, window=('kaiser', beta), pass_zero='highpass')
 
@@ -96,6 +98,8 @@ def FIRRemoveHF(ecgy, Fs, Fc, factor):
 
     # Compute the order and Kaiser parameter for the FIR filter.
     N, beta = kaiserord(ripple_db, width)
+
+    N = N | 1 # sets the lowest bit of N to 1 so that N is odd
 
     # Use firwin with a Kaiser window to create a highpass FIR filter.
     h = firwin(N, Fc/nyq_rate, window=('kaiser', beta), pass_zero='lowpass')
